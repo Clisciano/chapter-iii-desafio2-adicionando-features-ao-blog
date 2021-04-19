@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useState } from 'react';
 
 import { GetStaticProps } from 'next';
@@ -37,14 +39,10 @@ interface HomeProps {
   preview: boolean;
 }
 
-export default function Home({
-  postsPagination,
-  preview,
-}: HomeProps): JSX.Element {
+export default function Home({ postsPagination, preview }: HomeProps) {
   const [posts, setPosts] = useState<Post[]>(postsPagination.results);
   const [postsNextPage, setPostsNextPage] = useState(postsPagination.next_page);
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   async function handleLoadMore() {
     const postsResponse = await fetch(
       postsPagination.next_page
@@ -67,6 +65,7 @@ export default function Home({
   return (
     <>
       <Header />
+
       <main className={`${commonStyles.commonStyles} ${styles.container}`}>
         <div className={styles.posts}>
           {posts.map(post => (
@@ -117,7 +116,7 @@ export default function Home({
   );
 }
 
-export const getStaticProps: GetStaticProps = async ({
+export const getStaticProps: GetStaticProps<HomeProps> = async ({
   preview = false,
   previewData,
 }) => {
@@ -125,7 +124,7 @@ export const getStaticProps: GetStaticProps = async ({
   const postsResponse = await prismic.query(
     [Prismic.predicates.at('document.type', 'post')],
     {
-      fetch: ['post.title', 'post.subtitle', 'post.author'],
+      fetch: ['posts.title', 'posts.subtitle', 'posts.author'],
       pageSize: 1,
       ref: previewData?.ref ?? null,
     }

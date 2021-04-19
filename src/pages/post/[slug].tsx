@@ -1,3 +1,5 @@
+/* eslint-disable react/no-danger */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { GetStaticPaths, GetStaticProps } from 'next';
 
 import { useRouter } from 'next/router';
@@ -178,7 +180,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await prismic.query(
     [Prismic.predicates.at('document.type', 'post')],
     {
-      pageSize: 3,
+      pageSize: 5,
     }
   );
   const paths = posts.results.map(post => ({
@@ -219,7 +221,7 @@ export const getStaticProps: GetStaticProps = async ({
     {
       pageSize: 1,
       after: response.id,
-      orderings: '[document.last_publication_date]',
+      orderings: '[document.last_publication_date desc]',
     }
   );
 
